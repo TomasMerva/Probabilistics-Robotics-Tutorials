@@ -26,4 +26,6 @@
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
 	args="-urdf -model diff_drive -param robot_description"/>
 
+  <include file="$(find diff_drive_description)/launch/diff_drive_controllers.launch"/>
+
 </launch>

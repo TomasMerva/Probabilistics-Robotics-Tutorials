@@ -1,0 +1,10 @@
+#Publish all joint states
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+
+joints_controller:
+    type: velocity_controllers/JointGroupVelocityController
+    joints:
+        - right_wheel_joint
+        - left_wheel_joint
