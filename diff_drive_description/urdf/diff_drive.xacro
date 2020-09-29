@@ -1,25 +1,24 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="diff_drive">
 
-  <xacro:property name="base_width" value="0.16"/>
-  <xacro:property name="base_len" value="0.16"/>
+  <xacro:property name="base_width" value="0.2"/>
+  <xacro:property name="base_len" value="0.2"/>
+
   <xacro:property name="wheel_radius" value="0.035"/>
   <xacro:property name="base_wheel_gap" value="0.007"/>
-  <xacro:property name="wheel_separation" value="0.15"/>
   <xacro:property name="wheel_joint_offset" value="0.02"/>
 
   <xacro:property name="caster_wheel_radius" value="${wheel_radius/2}"/>
-  <xacro:property name="caster_wheel_mass" value="0.001"/>
-  <xacro:property name="caster_wheel_joint_offset" value="-0.052"/>
+  <xacro:property name="caster_wheel_joint_offset" value="0.07"/>
 
   <!--Include files-->
   <xacro:include filename="$(find diff_drive_description)/urdf/inertial.urdf.xacro" /> <!--Interial macros-->
-  <xacro:include filename="$(find diff_drive_description)/urdf/colors.urdf.xacro" /> <!--Colors-->
-
+  <xacro:include filename="$(find diff_drive_description)/urdf/materials.urdf.xacro" /> <!--Colors (materials)-->
+  <xacro:include filename="$(find diff_drive_description)/urdf/diff_drive_gazebo.urdf.xacro" /> <!-- Gazebo plugins -->
 
   <!--Base Footprint-->
   <link name="base_footprint">
-    <xacro:box_inertia m="10" w="0.001" h="0.001" d="0.001"/>
+    <xacro:box_inertia m="0.5" w="0.001" h="0.001" d="0.001"/>
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -30,7 +29,7 @@
 
   <!--Base link-->
   <link name="base_link">
-    <xacro:box_inertia m="1" w="${base_len}" h="${base_width}" d="0.01"/>
+    <xacro:box_inertia m="10" w="${base_len}" h="${base_width}" d="0.01"/>
     <visual>
       <geometry>
         <box size="${base_len} ${base_width} 0.01"/>
@@ -51,7 +50,9 @@
     <child link="base_link" />
   </joint>
 
-  <!--Wheel link & joint macro-->
+
+  <!-- WHEELS -->
+  <!-- Wheel link & joint macro -->
   <xacro:macro name="wheel" params="prefix reflect">
     <link name="${prefix}_wheel">
       <visual>
@@ -74,7 +75,9 @@
       <axis xyz="0 1 0" rpy="0 0 0" />
       <parent link="base_link"/>
       <child link="${prefix}_wheel"/>
-      <origin xyz="${wheel_joint_offset} ${((base_width/2)+base_wheel_gap)*reflect} -0.005" rpy="0 0 0"/>
+      <origin xyz="0 ${((base_width/2)+base_wheel_gap)*reflect} -0.005" rpy="0 0 0"/>
+      <limit effort="100" velocity="100" />
+      <dynamics damping="0.0" friction="0.0"/>
     </joint>
   </xacro:macro>
 
@@ -82,56 +85,34 @@
   <xacro:wheel prefix="left" reflect="1"/>
   <xacro:wheel prefix="right" reflect="-1"/>
 
-  <!--Caster Wheel Link-->
-  <link name="caster_wheel">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="${caster_wheel_radius}"/>
-      </geometry>
-      <material name="blue"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="${caster_wheel_radius}"/>
-      </geometry>
-    </collision>
-    <xacro:sphere_inertia m="1" r="${caster_wheel_radius}"/>
-  </link>
 
-  <!--Caster Wheel Joint-->
-  <joint name="caster_wheel_joint" type="continuous">
-    <axis xyz="0 1 0" rpy="0 0 0" />
-    <parent link="base_link"/>
-    <child link="caster_wheel"/>
-    <origin xyz="${caster_wheel_joint_offset} 0 -${caster_wheel_radius+0.005}" rpy="0 0 0"/>
-  </joint>
+  <xacro:macro name="caster_wheel" params="prefix reflect">
+    <link name="${prefix}_caster_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="${caster_wheel_radius}"/>
+        </geometry>
+        <material name="red"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="${caster_wheel_radius}"/>
+        </geometry>
+      </collision>
+      <xacro:sphere_inertia m="0.1" r="${caster_wheel_radius}"/>
+    </link>
 
-  <gazebo>
-    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
-    </plugin>
-  </gazebo>
+    <joint name="${prefix}_caster_wheel_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_caster_wheel"/>
+      <origin xyz="${caster_wheel_joint_offset*reflect} 0 -${caster_wheel_radius+0.005}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
 
-  <transmission name="left_tran">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="left_wheel_joint">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="left_wheel_motor">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </actuator>
-  </transmission>
+  <xacro:caster_wheel prefix="front" reflect="1"/>
+  <xacro:caster_wheel prefix="back" reflect="-1"/>
 
-  <transmission name="right_tran">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="right_wheel_joint">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="right_wheel_motor">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </actuator>
-  </transmission>
 
 </robot>
