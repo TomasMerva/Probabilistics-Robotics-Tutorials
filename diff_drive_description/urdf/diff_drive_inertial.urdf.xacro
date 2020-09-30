@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="diff_drive_inertial">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="diff_robot_inertial">
 
   <xacro:macro name="cylinder_inertia" params="m r h">
     <inertial>

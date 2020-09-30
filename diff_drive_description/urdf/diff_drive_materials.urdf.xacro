@@ -15,8 +15,6 @@
     <color rgba="0.8 0.0 0.0 1.0"/>
   </material>
 
-
-
   <gazebo reference="base_link">
     <material>Gazebo/Black</material>
   </gazebo>
@@ -36,5 +34,4 @@
   <gazebo reference="back_caster_wheel">
     <material>Gazebo/Red</material>
   </gazebo>
-
 </robot>
