@@ -13,12 +13,15 @@ public:
     sub_joystick = nh->subscribe("/cmd_vel", 1, &VelocityControl::Callback, this);
   }
   void Callback(const geometry_msgs::Twist msg){
-    std::cout << "som tu" << std::endl;
-    command.data.push_back(msg.linear.x);
-    command.data.push_back(msg.linear.x);
+    double velocity_right = (2*msg.linear.x+msg.angular.z*0.4)/(2*0.075);
+    double velocity_left = (2*msg.linear.x-msg.angular.z*0.4)/(2*0.075);
+    std::cout << "velocity right: " << velocity_right << "  velocity_left: " << velocity_left << std::endl;
+    command.data.push_back(velocity_right);
+    command.data.push_back(velocity_left);
     command_pub.publish(command);
     command.data.clear();
   }
+
 private:
   ros::Publisher command_pub;
   ros::Subscriber sub_joystick;
