@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   tf2
+  tf2_ros
   std_msgs
   geometry_msgs
 )
@@ -107,7 +108,13 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include/diff_drive_velocity
   LIBRARIES
-  CATKIN_DEPENDS roscpp rospy tf2 std_msgs geometry_msgs
+  CATKIN_DEPENDS
+    roscpp
+    rospy
+    tf2
+    std_msgs
+    geometry_msgs
+    tf2_ros
 #  DEPENDS system_lib
 )
 

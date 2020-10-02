@@ -1,6 +1,7 @@
 1. opravit vysku footprintu -> hotove
 2. angular and translation velocity -> hotove a otestovane
-3. velocity-based odometry -> bacha na pretecenie uhla, zrob daku normalizaciu
+3. velocity-based odometry -> hotove, uhol je znormalizovany
+	3.1 publikovat odometry
 4. Gazebo tvorba/spustanie svetu s prekazkami
 5. zobrazovanie prejdenej trajektorie
 6. LIDAR scaner -> spracovanie dat, detekcia prekazok, data association
