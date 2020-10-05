@@ -23,8 +23,8 @@ void VelocityControl::Callback_UnicycleModel(const geometry_msgs::Twist msg)
   double velocity_right = (2*robot_velocity.translation+robot_velocity.angular*0.4)/(2*0.075);
   double velocity_left = (2*robot_velocity.translation-robot_velocity.angular*0.4)/(2*0.075);
   //Publishing velocities for the right and left wheels
-  joints_command.data.push_back(velocity_right);
   joints_command.data.push_back(velocity_left);
+  joints_command.data.push_back(velocity_right);
   joints_controller_pub.publish(joints_command);
   joints_command.data.clear();
 }
