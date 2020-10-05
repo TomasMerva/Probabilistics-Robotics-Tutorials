@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   std_msgs
   geometry_msgs
+  message_generation
+  visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -50,11 +52,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+ add_message_files(
+   FILES
+   state.msg
+   visualize_trajectory.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -71,10 +73,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   roscpp rospy tf2 std_msgs geometry_msgs
-# )
+generate_messages(
+ DEPENDENCIES
+ std_msgs
+ geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -115,6 +118,8 @@ catkin_package(
     std_msgs
     geometry_msgs
     tf2_ros
+    message_generation
+    visualization_msgs
 #  DEPENDS system_lib
 )
 
@@ -129,6 +134,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+
+add_library(velocity_control src/velocity_control.cpp)
+
+add_executable(diff_drive_velocity src/diff_drive_velocity.cpp)
+target_link_libraries(diff_drive_velocity velocity_control ${catkin_LIBRARIES})
 
 add_executable(velocity_convertion src/velocity_convertion.cpp)
 target_link_libraries(velocity_convertion ${catkin_LIBRARIES})
