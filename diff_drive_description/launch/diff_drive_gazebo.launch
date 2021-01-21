@@ -31,4 +31,10 @@
 
   <include file="$(find diff_drive_description)/launch/diff_drive_controllers.launch"/>
 
+
+    <!--RViz-->
+    <node name="rviz" pkg="rviz" type="rviz" required="true"/>
+
+    <!--Odom-->
+    <node name="diff_drive_velocity" pkg="diff_drive_velocity" type="diff_drive_velocity"/>
 </launch>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(diff_drive_velocity)
+project(diff_drive_motion_control)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -8,14 +8,14 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  tf2
-  tf2_ros
-  std_msgs
-  geometry_msgs
-  message_generation
-  visualization_msgs
+    roscpp
+    rospy
+    tf2
+    tf2_ros
+    std_msgs
+    geometry_msgs
+    message_generation
+    visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -52,11 +52,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
- add_message_files(
-   FILES
-   state.msg
-   visualize_trajectory.msg
- )
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -73,11 +73,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
- DEPENDENCIES
- std_msgs
- geometry_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   geometry_msgs#   std_msgs#   visualization_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -109,17 +108,17 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include/diff_drive_velocity
+  INCLUDE_DIRS include/diff_drive_motion_control
   LIBRARIES
   CATKIN_DEPENDS
-    roscpp
-    rospy
-    tf2
-    std_msgs
-    geometry_msgs
-    tf2_ros
-    message_generation
-    visualization_msgs
+      roscpp
+      rospy
+      tf2
+      std_msgs
+      geometry_msgs
+      tf2_ros
+      message_generation
+      visualization_msgs
 #  DEPENDS system_lib
 )
 
@@ -130,21 +129,20 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
 
-add_library(velocity_control src/velocity_control.cpp)
 
-add_executable(diff_drive_velocity src/diff_drive_velocity.cpp)
-target_link_libraries(diff_drive_velocity velocity_control ${catkin_LIBRARIES})
+add_executable(pid_go_to_goal src/pid_go_to_goal.cpp)
+target_link_libraries(pid_go_to_goal ${catkin_LIBRARIES})
 
 
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/diff_drive_velocity.cpp
+#   src/${PROJECT_NAME}/diff_drive_motion_control.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -155,7 +153,7 @@ target_link_libraries(diff_drive_velocity velocity_control ${catkin_LIBRARIES})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/diff_drive_velocity_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/diff_drive_motion_control_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -219,7 +217,7 @@ target_link_libraries(diff_drive_velocity velocity_control ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_diff_drive_velocity.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_diff_drive_motion_control.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

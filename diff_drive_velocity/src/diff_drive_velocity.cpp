@@ -14,15 +14,14 @@ int main(int argc, char **argv)
 
   diff_drive_velocity::state robot_state;
 
-  ros::Time current_time;
-  ros::Time last_time;
+  ros::Time current_time = ros::Time::now();;
+  ros::Time last_time = ros::Time::now();;
 
   ros::Rate rate(50);
   while(ros::ok())
   {
     current_time = ros::Time::now();
-    //auto dt = (current_time - last_time).toSec();
-    double dt = 0.02;
+    auto dt = 0.02;
     control.ComputeOdometry(&robot_state, dt);
 
     control.PublishOdometry(robot_state, current_time);

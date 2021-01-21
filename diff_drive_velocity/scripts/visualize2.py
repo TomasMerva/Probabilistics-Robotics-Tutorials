@@ -3,6 +3,7 @@
 import numpy as np
 import rospy
 from nav_msgs.msg import Odometry
+from geometry_msgs.msg import PoseStamped
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -19,6 +20,7 @@ class Visualizer:
     self.est_pose, = plt.plot([],[],color="r", linewidth=3, label="Estimated pose")
     self.x_est_data, self.y_est_data = [], []
     self.x_true_data, self.y_true_data = [], []
+    self.goal_x, self.goal_y = 0, 0
 
   def plot_init(self):
     self.ax.set_xlim(-7, 7)
@@ -34,6 +36,11 @@ class Visualizer:
     self.y_true_data.append(msg.pose[1].position.x)
     self.x_true_data.append(msg.pose[1].position.y)
 
+  def GoalCallback(self, msg):
+    self.goal_x = msg.pose.position.x
+    self.goal_y = msg.pose.position.y
+    plt.plot(self.goal_x, self.goal_y)
+
   def update_plot(self, frame):
     self.true_pose.set_data(self.x_true_data, self.y_true_data)
     self.est_pose.set_data(self.x_est_data, self.y_est_data)
@@ -43,6 +50,8 @@ class Visualizer:
 vis = Visualizer()
 rospy.init_node("visualize_trajectory")
 sub = rospy.Subscriber("/odom", Odometry, vis.OdometryCallback)
+sub_goal = rospy.Subscriber("/move_base_simple/goal", PoseStamped, vis.GoalCallback)
+
 sub_gazebo = rospy.Subscriber("/gazebo/model_states", ModelStates, vis.TrueOdometryCallback)
 
 ani = animation.FuncAnimation(vis.fig, vis.update_plot, init_func=vis.plot_init, interval=50)
