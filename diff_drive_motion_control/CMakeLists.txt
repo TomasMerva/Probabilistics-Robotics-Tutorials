@@ -138,6 +138,9 @@ include_directories(
 add_executable(pid_go_to_goal src/pid_go_to_goal.cpp)
 target_link_libraries(pid_go_to_goal ${catkin_LIBRARIES})
 
+add_executable(pid_go_to_goal_v2 src/pid_go_to_goal_v2.cpp)
+target_link_libraries(pid_go_to_goal_v2 ${catkin_LIBRARIES})
+
 
 
 ## Declare a C++ library
